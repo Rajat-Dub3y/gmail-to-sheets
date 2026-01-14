@@ -46,7 +46,6 @@ def main():
     if not emails:
         print("✔ No new unread emails found. Exiting.")
         return
-
     # 2. Parse them
     parsed = [EmailParser.parse(e) for e in emails]
 
@@ -64,7 +63,8 @@ def main():
     sheets.append_rows(filtered)
 
     # 5. Mark as read on Gmail
-    gmail.mark_as_read([e["id"] for e in filtered])
+    gmail.mark_as_read([e["id"] for e in emails])
+
 
     # 6. Update state persistence
     newest_id = filtered[-1]["id"]

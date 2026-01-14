@@ -50,16 +50,13 @@ class EmailParser:
 
         return text
 
-
     @staticmethod
-    def parse(email_obj: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Main parser used by main.py before writing to sheet.
-        """
+    def parse(raw: dict):
+        dt = parsedate_to_datetime(raw["date"]).isoformat()
         return {
-            "id": email_obj["id"],
-            "from": EmailParser.extract_sender(email_obj["from"]),
-            "subject": email_obj.get("subject", "").strip() if email_obj.get("subject") else "",
-            "date": EmailParser.extract_date(email_obj["date"]),
-            "body": EmailParser.clean_body(email_obj["body"]),
+            "id": raw["id"],
+            "from": raw["from"],
+            "subject": raw["subject"],
+            "date": dt,
+            "body": EmailParser.clean_body(raw["body"]),
         }

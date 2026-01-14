@@ -47,7 +47,7 @@ class GmailService:
         Returns unread email metadata + body content.
         """
         results = self.service.users().messages().list(
-            userId="me", labelIds=["INBOX", "UNREAD"]
+            userId="me",q="category:primary is:unread"
         ).execute()
 
         messages = results.get("messages", [])
