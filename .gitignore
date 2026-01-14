@@ -1,3 +1,4 @@
 credentials/
 myenv/
 __pycache__/
+state.json

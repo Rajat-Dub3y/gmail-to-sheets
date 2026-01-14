@@ -31,9 +31,9 @@ class EmailParser:
 
     @staticmethod
     def clean_body(body: str) -> str:
-        """
-        Convert HTML to plain text if needed & remove extra whitespace.
-        """
+        MAX_BODY_LEN = 48000  # leave buffer below Sheets 50k hard limit
+
+        # Convert HTML → plaintext if needed
         if "<html" in body.lower() or "<div" in body.lower() or "<p" in body.lower():
             soup = BeautifulSoup(body, "lxml")
             text = soup.get_text("\n")
@@ -42,7 +42,14 @@ class EmailParser:
 
         # Normalize whitespace
         lines = [line.strip() for line in text.splitlines() if line.strip()]
-        return "\n".join(lines)
+        text = "\n".join(lines)
+
+        # Truncate to avoid Sheets API 400 error
+        if len(text) > MAX_BODY_LEN:
+            text = text[:MAX_BODY_LEN] + "\n...[truncated due to size limit]"
+
+        return text
+
 
     @staticmethod
     def parse(email_obj: Dict[str, Any]) -> Dict[str, Any]:
